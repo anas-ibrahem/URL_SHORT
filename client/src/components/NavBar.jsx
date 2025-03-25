@@ -18,7 +18,7 @@ const NavBar = () => {
     return (
         <header className="bg-gradient-to-r from-main to-[#702020] text-white p-6 shadow-lg">
             <div className="max-w-6xl mx-auto flex flex-col gap-4">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between flex-wrap">
                     <div className="flex items-center gap-4">
                         <Link to="/" className="w-12 h-12">
                             <img src="https://ccextractor.org/images/ccx.svg" alt="CCextractor Logo" className="w-full h-full" />
@@ -26,7 +26,7 @@ const NavBar = () => {
                         <h1 className="text-3xl font-bold font-roboto">CCextractor Surprise URL</h1>
                     </div>
                     
-                    <nav className="flex space-x-4">
+                    <nav className="flex space-x-4 mt-4 md:mt-0">
                         {tabs.map((tab) => (
                             <Link
                                 key={tab.path}
