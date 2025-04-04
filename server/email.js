@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
 
 export async function sendVerificationEmail(to, code) {
     try {
-        return await transporter.sendMail({
+        const mailOptions = {
             from: process.env.EMAIL_USER,
             to: to,
             subject: '🔑 Your Verification Code',
@@ -30,7 +30,11 @@ export async function sendVerificationEmail(to, code) {
                 </div>
             `,
             text: `Hi,\n\nThank you for using our service. Your verification code is: ${code}\n\nPlease use this code to complete your verification process. If you did not request this code, please ignore this email.\n\nBest regards,\n`,
-        });
+        };
+
+        const info = await transporter.sendMail(mailOptions);
+        console.log('Verification email sent:', info.messageId);
+        return info;
     } catch (error) {
         console.error('Error sending verification email:', error);
         throw error;
@@ -39,9 +43,6 @@ export async function sendVerificationEmail(to, code) {
 
 export async function sendNotificationEmail(to, accessedUser, ownerName, originalURL) {
     try {
-        console.log(`Notification being sent to ${to} for URL: ${originalURL}`);
-        console.log(`Accessed by: ${accessedUser}, Owner: ${ownerName}`);
-
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: to,
@@ -66,6 +67,6 @@ export async function sendNotificationEmail(to, accessedUser, ownerName, origina
         return info;
     } catch (error) {
         console.error('Error sending notification email:', error);
-        throw errorك
+        throw error;
     }
 }
