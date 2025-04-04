@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
 
 
 export async function sendVerificationEmail(to, code) {
-    return transporter.sendMail({
+    return await transporter.sendMail({
         from: process.env.EMAIL_USER,
         to: to,
         subject: '🔑 Your Verification Code',
@@ -33,8 +33,12 @@ export async function sendVerificationEmail(to, code) {
 }
 
 export async function sendNotificationEmail(to, accessedUser, ownerName, originalURL) {
+    console.log(`Notification being sent to ${to} for URL: ${originalURL}`);
+    console.log(`Accessed by: ${accessedUser}, Owner: ${ownerName}`);
+    console.log(`Original URL: ${originalURL}`);
 
-    return transporter.sendMail({
+
+    return await transporter.sendMail({
         from: process.env.EMAIL_USER,
         to: to,
         subject: '🔔 URL Access Notification',
