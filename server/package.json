@@ -5,6 +5,7 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "firebase": "^11.5.0",
-    "nanoid": "^5.1.5"
+    "nanoid": "^5.1.5",
+    "nodemailer": "^6.10.0"
   }
 }

@@ -25,14 +25,24 @@ function Home() {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
+    
+    // Clear allowed emails when disabling sign-in requirement
+    if (name === 'requiresSignIn' && !checked) {
+      setFormData(prev => ({
+        ...prev,
+        [name]: checked,
+        allowedEmails: []
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: type === 'checkbox' ? checked : value
+      }));
+    }
   };
 
   const handleEmailAdd = (e) => {
-    if (e.key === 'Enter' && emailInput.trim()) {
+    if (e.key === 'Enter' && emailInput.trim() && formData.requiresSignIn) {
       setFormData(prev => ({
         ...prev,
         allowedEmails: [...prev.allowedEmails, emailInput.trim()]
@@ -65,6 +75,13 @@ function Home() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validate
+    if (formData.requiresSignIn && formData.allowedEmails.length === 0) {
+      setError('At least one allowed email is required when sign-in is required');
+      return;
+    }
+    
     setIsLoading(true);
     setError('');
     console.log(formData);
@@ -73,6 +90,9 @@ function Home() {
         originalURL: formData.originalURL,
         emails: formData.allowedEmails,
         requireSign: formData.requiresSignIn,
+        sendNotification : formData.sendNotification,
+        ownerEmail: formData.ownerEmail,
+        ownerName: formData.ownerName,
       };
 
       if (formData.expirationDate) { // Add expiration date if set
@@ -174,14 +194,17 @@ function Home() {
               </div>
 
               <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">Allowed Emails</label>
+                <label className={`block text-sm font-medium ${formData.requiresSignIn ? 'text-gray-700' : 'text-gray-400'}`}>
+                  Allowed Emails {formData.requiresSignIn && '(Required)'}
+                </label>
                 <input
                   type="email"
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-main"
-                  placeholder="Press Enter to add email"
+                  className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-main ${!formData.requiresSignIn ? 'bg-gray-100 cursor-not-allowed' : ''}`}
+                  placeholder={formData.requiresSignIn ? "Press Enter to add email" : "Enable sign-in requirement first"}
                   value={emailInput}
                   onChange={(e) => setEmailInput(e.target.value)}
                   onKeyPress={handleEmailAdd}
+                  disabled={!formData.requiresSignIn}
                 />
                 <div className="flex flex-wrap gap-2 mt-2">
                   {formData.allowedEmails.map((email) => (
@@ -284,7 +307,7 @@ function Home() {
               <button
                 type="submit"
                 className="w-full py-3 px-4 bg-main text-white rounded-lg hover:bgs-secondry transition-colors hover:cursor-pointer disabled:opacity-50"
-                disabled={isLoading}
+                disabled={isLoading || (formData.requiresSignIn && formData.allowedEmails.length === 0)}
               >
                 {isLoading ? 'Creating...' : 'Create Secret URL'}
               </button>

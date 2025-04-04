@@ -1,11 +1,10 @@
 const fetchAPI = async (endpoint, method = 'GET', body = null) => {
-    const headers = {
-        'Content-Type': 'application/json',
-    };
-
+    console.log('Fetching API:', endpoint, method, body);
     const options = {
         method,
-        headers,
+        headers: {
+        'Content-Type': 'application/json',
+        },
     };
 
     if (body) {
