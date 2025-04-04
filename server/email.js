@@ -37,7 +37,7 @@ export async function sendNotificationEmail(to, accessedUser, ownerName, origina
     console.log(`Accessed by: ${accessedUser}, Owner: ${ownerName}`);
     console.log(`Original URL: ${originalURL}`);
 
-
+    await new Promise(resolve => setTimeout(resolve, 4000)); // try to fix the timeout issue
     return await transporter.sendMail({
         from: process.env.EMAIL_USER,
         to: to,
