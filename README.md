@@ -2,6 +2,9 @@
 
 ### This project is a **URL Shortener** service that allows users to create short, shareable links with advanced features like email-based authentication, access notifications, and expiration dates. It is designed to provide secure and controlled access to shared URLs.
 
+> ⚠️ **Note:** This is a **fully functional prototype**, designed to demonstrate core features like secure sharing, authentication, and notifications. It provides a **strong starting point** and **flexibility for scaling** into a production-ready system.
+
+
 ### Deployed at https://secret-url-site.vercel.app/
 ---
 
@@ -31,7 +34,44 @@ https://github.com/user-attachments/assets/ae593028-4120-47ae-b0df-63893700ee91
   - Allows users to create short URLs with optional expiration dates and access restrictions.
   - Implements an authentication flow for accessing protected URLs.
 ---
+## 🗄️ Database Schema
 
+The system uses **Firebase Firestore**, a scalable NoSQL database, to store URLs and authentication data. This schema is simple but designed for future enhancements.
+
+### 🔗 Collections
+
+---
+
+### 1. `url`
+Stores metadata for each shortened URL.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `originalURL` | `string` | Target URL (e.g., `"https://drive.google.com/"`) |
+| `shortId` | `string` | Unique identifier (e.g., `"Qusjrv"`) |
+| `ownerEmail` | `string` | Creator’s email |
+| `ownerName` | `string` | Creator’s name |
+| `emails` | `array` | Authorized emails |
+| `expiresAt` | `timestamp` | Optional expiration timestamp |
+| `createdAt` | `timestamp` | Time of creation |
+| `require-sign` | `boolean` | Whether sign-in is required |
+| `send-notification` | `boolean` | Whether to notify owner on access |
+
+---
+
+### 2. `verifications`
+Stores email codes for access to protected links.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `code` | `string` | Verification code |
+| `email` | `string` | Recipient’s email |
+| `expiresAt` | `timestamp` | Code expiration time |
+| `shortId` | `string` | Reference to shortened URL |
+
+---
+
+---
 ## API Endpoints
 
 ### **1. Create Short URL**
